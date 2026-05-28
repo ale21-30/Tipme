@@ -3,45 +3,113 @@ package com.example.tipme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.tipme.ui.theme.TipmeTheme
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
-            TipmeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            MaterialTheme {
+                TipMeApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun TipMeApp() {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TipmeTheme {
-        Greeting("Android")
+    // ESTADOS
+    var montoCuenta by remember { mutableStateOf("") }
+    var porcentajePropina by remember { mutableStateOf("") }
+    var resultado by remember { mutableStateOf("") }
+
+    // LAYOUT PRINCIPAL
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        // TITULO
+        Text(
+            text = "TipMe",
+            fontSize = 30.sp
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            text = "Calculadora de Propinas",
+            fontSize = 18.sp
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // TEXTFIELD MONTO
+        OutlinedTextField(
+            value = montoCuenta,
+            onValueChange = {
+                montoCuenta = it
+            },
+            label = {
+                Text("Monto de la cuenta")
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // TEXTFIELD PROPINA
+        OutlinedTextField(
+            value = porcentajePropina,
+            onValueChange = {
+                porcentajePropina = it
+            },
+            label = {
+                Text("Porcentaje de propina")
+            }
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // BOTON
+        Button(
+            onClick = {
+
+                val monto = montoCuenta.toDoubleOrNull() ?: 0.0
+                val porcentaje = porcentajePropina.toDoubleOrNull() ?: 0.0
+
+                val propina = monto * porcentaje / 100
+                val total = monto + propina
+
+                resultado =
+                    "Propina: $${String.format("%.2f", propina)}\n" +
+                            "Total a pagar: $${String.format("%.2f", total)}"
+            }
+        ) {
+
+            Text("Calcular")
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // RESULTADO
+        Text(
+            text = resultado,
+            fontSize = 20.sp
+        )
     }
 }

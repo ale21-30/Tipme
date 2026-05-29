@@ -16,7 +16,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
 
@@ -43,6 +45,7 @@ fun TipMeApp() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
 
         horizontalAlignment = Alignment.CenterHorizontally
@@ -80,7 +83,8 @@ fun TipMeApp() {
             },
             label = {
                 Text("Monto de la cuenta")
-            }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -93,7 +97,8 @@ fun TipMeApp() {
             },
             label = {
                 Text("Porcentaje de propina")
-            }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -109,8 +114,8 @@ fun TipMeApp() {
                 val total = monto + propina
 
                 resultado =
-                    "Propina: $${String.format("%.2f", propina)}\n" +
-                            "Total a pagar: $${String.format("%.2f", total)}"
+                    "Propina: $${String.format(Locale.US, "%.2f", propina)}\n" +
+                            "Total a pagar: $${String.format(Locale.US, "%.2f", total)}"
             }
         ) {
 
